@@ -39,12 +39,19 @@ class NewEntry(object):
 
         return answer
 
-#TODO: Increment employee ID or add a check to prevent duplicates
 
-#TODO: Delete employee
-#TODO: Update employee
+# TODO: Increment employee ID or add a check to prevent duplicates
+
+# TODO 3: Delete employee
+# TODO 4: Update employee
+
+# TODO 1: Check if CSV exists. If not, created in the end.
 
 new_entry = NewEntry()
 new_entry.summary_entry()  # This trigger the whole NewEntry class.
 
-print(employee_list)
+#print(employee_list) // for testing
+
+#Saves the data to a csv file
+df = pd.DataFrame(employee_list, columns=["EmployeeID", "FirstName", "LastName"])
+df.to_csv('employee_list2.csv', sep=',', index=False)
