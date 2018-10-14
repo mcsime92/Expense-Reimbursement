@@ -1,8 +1,9 @@
 from random import randint
 import pandas as pd
+from pathlib import Path
 
 employee_list = []
-
+employee_db = 'employee_list.csv'
 
 class NewEntry(object):
     def gen_employee_name(self):
@@ -20,7 +21,7 @@ class NewEntry(object):
 
         print(first_name, last_name, '- Employee ID:', employee_id)
 
-        new_employee_entry = (employee_id, first_name, last_name)
+        new_employee_entry = employee_id, first_name, last_name
         employee_list.append(new_employee_entry)
 
         NewEntry().question()
@@ -44,6 +45,7 @@ class NewEntry(object):
 
 # TODO 3: Delete employee
 # TODO 4: Update employee
+# TODO 5: Try catch for PermissionError: [Errno 13] Permission denied: 'employee_list.csv'
 
 # TODO 1: Check if CSV exists. If not, created in the end.
 
@@ -52,6 +54,20 @@ new_entry.summary_entry()  # This trigger the whole NewEntry class.
 
 #print(employee_list) // for testing
 
-#Saves the data to a csv file
-df = pd.DataFrame(employee_list, columns=["EmployeeID", "FirstName", "LastName"])
-df.to_csv('employee_list2.csv', sep=',', index=False)
+my_file = Path(employee_db)
+if my_file.is_file():
+    print('Files exists')
+    print(employee_list)
+
+    #df = pd.read_csv(employee_db)
+    with open(employee_db, 'a') as ed:
+        #ed.write("\n")
+        for item in employee_list:
+            ed.write(str(item))
+            ed.write("\n")
+
+else:
+    #Saves the data to a csv file
+    print('Files creation')
+    df = pd.DataFrame(employee_list, columns=["EmployeeID", "FirstName", "LastName"])
+    df.to_csv(employee_db, sep=',', index=False)
