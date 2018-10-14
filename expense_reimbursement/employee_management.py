@@ -1,4 +1,5 @@
 from random import randint
+import pandas as pd
 
 employee_list = []
 
@@ -14,7 +15,6 @@ class NewEntry(object):
         return employee_id
 
     def summary_entry(self):
-
         first_name, last_name = NewEntry().gen_employee_name()  # unpacking
         employee_id = NewEntry().gen_employee_id()
 
@@ -23,29 +23,28 @@ class NewEntry(object):
         new_employee_entry = (employee_id, first_name, last_name)
         employee_list.append(new_employee_entry)
 
-    # TODO: Increment employee ID
+        NewEntry().question()
 
+    def question(self):
+        answer = input('\nWould you like to add more entries ? Y or N ')
+
+        if answer == 'Y':
+            NewEntry().summary_entry()
+
+        elif answer == 'N':
+            print('\nDone with employee management.')
+        else:
+            print('Please answer by Y or N')
+            NewEntry().question()
+
+        return answer
+
+#TODO: Increment employee ID or add a check to prevent duplicates
+
+#TODO: Delete employee
+#TODO: Update employee
 
 new_entry = NewEntry()
 new_entry.summary_entry()  # This trigger the whole NewEntry class.
 
-
-def additional_entry():
-    if answer == 'Y':
-        new_entry.summary_entry()
-
-    elif answer == 'N':
-        print('Done with employee management.')
-    else:
-        print('Please answer by Y or N')
-
-
-# TODO: Delete employee
-# TODO: Update employee
-
-answer = input('Would you like to add more entries ? Y or N ')
-additional_entry()
-
 print(employee_list)
-
-print('bye')
