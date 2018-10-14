@@ -63,7 +63,7 @@ if my_file.is_file():
     with open(employee_db, 'a') as ed:
         #ed.write("\n")
         for item in employee_list:
-            ed.write(str(item))
+            ed.write((",".join(map(str, item))))
             ed.write("\n")
 
 else:
