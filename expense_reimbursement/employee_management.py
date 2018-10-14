@@ -5,6 +5,7 @@ from pathlib import Path
 employee_list = []
 employee_db = 'employee_list.csv'
 
+
 class NewEntry(object):
     def gen_employee_name(self):
         input_first_name = input('> Employee first name ')
@@ -19,8 +20,6 @@ class NewEntry(object):
         first_name, last_name = NewEntry().gen_employee_name()  # unpacking
         employee_id = NewEntry().gen_employee_id()
 
-        print(first_name, last_name, '- Employee ID:', employee_id)
-
         new_employee_entry = employee_id, first_name, last_name
         employee_list.append(new_employee_entry)
 
@@ -31,43 +30,42 @@ class NewEntry(object):
 
         if answer == 'Y':
             NewEntry().summary_entry()
-
         elif answer == 'N':
             print('\nDone with employee management.')
         else:
             print('Please answer by Y or N')
             NewEntry().question()
-
         return answer
 
 
-# TODO: Increment employee ID or add a check to prevent duplicates
+class ManageEntry(object):
+    def show_entry(self):
+        pass
 
+    def delete_entry(self):
+        pass
+
+    def update_entry(self):
+        pass
+
+
+# TODO 1: Increment employee ID or add a check to prevent duplicates
 # TODO 3: Delete employee
 # TODO 4: Update employee
 # TODO 5: Try catch for PermissionError: [Errno 13] Permission denied: 'employee_list.csv'
 
-# TODO 1: Check if CSV exists. If not, created in the end.
-
 new_entry = NewEntry()
 new_entry.summary_entry()  # This trigger the whole NewEntry class.
 
-#print(employee_list) // for testing
+# print(employee_list) // for testing
 
+# Checks if a file exists. If yes, uses it. If no, creates it with data.
 my_file = Path(employee_db)
 if my_file.is_file():
-    print('Files exists')
-    print(employee_list)
-
-    #df = pd.read_csv(employee_db)
     with open(employee_db, 'a') as ed:
-        #ed.write("\n")
         for item in employee_list:
             ed.write((",".join(map(str, item))))
             ed.write("\n")
-
 else:
-    #Saves the data to a csv file
-    print('Files creation')
     df = pd.DataFrame(employee_list, columns=["EmployeeID", "FirstName", "LastName"])
     df.to_csv(employee_db, sep=',', index=False)
