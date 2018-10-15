@@ -27,13 +27,18 @@ class DataManagement(object):
             for row in csv_file:
                 if record == row[0] or record == row[1] or record == row[2]:
                     print(row)
-
-
         else:
             print('There is no such file')
 
     def delete_entry(self):
-        pass
+        my_file = Path(employee_db)
+        if my_file.is_file():
+            record = input('Enter employee ID, first or last name ')
+            with open(employee_db, 'rb') as inp, open(employee_db, 'wb') as out:
+                writer = csv.writer(out)
+                for row in csv.reader(inp):
+                    if record == row[0] or record == row[1] or record == row[2]:
+                        writer.writerow(row)
 
     def update_entry(self):
         pass
@@ -65,6 +70,7 @@ class NewEntry(object):
             NewEntry().summary_entry()
         elif answer == 'N':
             print('\nDone with employee management.')
+            DataManagement().data_to_file()
         else:
             print('Please answer by Y or N')
             NewEntry().question()
@@ -103,7 +109,8 @@ def functionality_choice():
     if functionality == "1":
         NewEntry().summary_entry()
     elif functionality == "2":
-        DataManagement().show_entry()
+        #DataManagement().show_entry()
+        DataManagement().delete_entry()
     elif functionality == "3":
         print('Exit')
         exit()
@@ -118,3 +125,4 @@ functionality_choice()
 # print(employee_list) // for testing
 
 # Checks if a file exists. If yes, uses it. If no, creates it with data.
+
