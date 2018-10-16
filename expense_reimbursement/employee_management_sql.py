@@ -36,6 +36,39 @@ def new_entry():
     connection.commit()
 
 
+def delete_entry():
+    search_last_name = input('> Provide employee last name to be deleted: ')
+    sql_command = """SELECT
+                            id, first_name, last_name
+                        FROM
+                            emp
+                        WHERE
+                            last_name = ?;"""
+
+    cursor.execute(sql_command, (search_last_name,))
+
+    ans = cursor.fetchone()
+
+    print("\nThis is the current entry:", ans)
+    choice = input("Do you want to delete this entry? Press Y to delete, N to cancel: ")
+
+    if choice == 'Y':
+        sql_command = """DELETE
+                        FROM
+                            emp
+                        WHERE
+                            last_name = ?;"""
+        cursor.execute(sql_command, (search_last_name,))
+        connection.commit()
+
+    elif choice == 'N':
+        print('No entry were deleted.')
+
+    else:
+        print("\nERROR: you pressed something else. Please try again.\n")
+        delete_entry()
+
+
 def update_entry():
     search_last_name = input('> Provide employee last name to be updated: ')
     sql_command = """SELECT
@@ -71,7 +104,7 @@ def update_entry():
         connection.commit()
 
     else:
-        print("ERROR: you pressed something else. Please try again.\n")
+        print("\nERROR: you pressed something else. Please try again.\n")
         update_entry()
 
 
@@ -85,6 +118,7 @@ def print_db():
 database_creation()
 # new_entry()
 # update_entry()
+delete_entry()
 
 print_db()
 connection.close()
