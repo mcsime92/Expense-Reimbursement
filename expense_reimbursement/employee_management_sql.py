@@ -2,6 +2,58 @@ import sqlite3
 from random import randint
 
 
+def functionality_choice():
+    functionality = input('What would you lke to do? Type 1, 2, 3 or 4:\n'
+                          '1. New entry \n'
+                          '2. Manage entries \n'
+                          '3. Manage table \n'
+                          '4. Quit ')
+
+    if functionality == "1":
+        new_entry()
+
+    elif functionality == "2":
+        answer = input('What would you lke to do? Type 1, 2, or 3:\n'
+                       '1. Update entry \n'
+                       '2. Delete entry \n'
+                       '3. Quit ')
+
+        if answer == "1":
+            update_entry()
+        elif answer == "2":
+            delete_entry()
+        elif answer == "3":
+            print('Exit')
+            exit()
+        else:
+            print('ERROR. Please answer 1, 2 or 3')
+            functionality_choice()
+
+    elif functionality == "3":
+        answer2 = input('What would you lke to do? Type 1, 2, or 3:\n'
+                        '1. Delete table \n'
+                        '2. Drop table \n'
+                        '3. Quit ')
+
+        if answer2 == "1":
+            delete_table()
+        elif answer2 == "2":
+            drop_table()
+        elif answer2 == "3":
+            print('Exit')
+            exit()
+        else:
+            print('ERROR. Please answer 1, 2 or 3')
+            functionality_choice()
+
+    elif functionality == "4":
+        print('Exit')
+        exit()
+    else:
+        print('Please answer 1, 2, 3 or 4')
+        functionality_choice()
+
+
 def database_creation():
     sql_command = """CREATE TABLE IF NOT EXISTS emp (
                     id INTEGER PRIMARY KEY,
@@ -37,6 +89,17 @@ def new_entry():
     sql_command = """INSERT INTO emp VALUES (?, ?, ?);"""
     cursor.execute(sql_command, (employee_id, input_first_name, input_last_name))
     connection.commit()
+
+    answer = input('\nWould you like to add more entries ? Y or N ')
+
+    if answer == 'Y':
+        new_entry()
+    elif answer == 'N':
+        print('\nDone with new entries.')
+
+    else:
+        print('Please answer by Y or N\n')
+        new_entry()
 
 
 def delete_entry():
@@ -123,6 +186,7 @@ def update_entry():
         update_entry()
 
 
+# Testing
 def print_db():
     cursor.execute("SELECT * FROM emp")
     ans = cursor.fetchall()
@@ -130,20 +194,13 @@ def print_db():
         print(i)
 
 
-# TODO: Contextual menu to navigate functions
 # TODO: Protect from code injection for drop table etc.
 
 connection = sqlite3.connect('employee_list.db')
 cursor = connection.cursor()
-
 database_creation()
-# add_dummies()
-# new_entry()
-# update_entry()
-# delete_entry()
+print('\n>>> Employee Management Interface <<<\n')
 
-
-# delete_table()
-# drop_table()
+functionality_choice()
 
 connection.close()
