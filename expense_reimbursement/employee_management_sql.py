@@ -1,9 +1,6 @@
 import sqlite3
 from random import randint
 
-connection = sqlite3.connect('employee_list.db')
-cursor = connection.cursor()
-
 
 def database_creation():
     sql_command = """CREATE TABLE IF NOT EXISTS emp (
@@ -20,6 +17,12 @@ def add_dummies():
     cursor.execute(sql_command)
 
     sql_command = """INSERT INTO emp VALUES(453, "Marge", "Simpson");"""
+    cursor.execute(sql_command)
+
+    sql_command = """INSERT INTO emp VALUES(454, "Lisa", "Simpson");"""
+    cursor.execute(sql_command)
+
+    sql_command = """INSERT INTO emp VALUES(455, "Bart", "Simpson");"""
     cursor.execute(sql_command)
 
     connection.commit()
@@ -69,6 +72,18 @@ def delete_entry():
         delete_entry()
 
 
+def delete_table():
+    sql_command = """DELETE FROM emp;"""
+    cursor.execute(sql_command)
+    connection.commit()
+
+
+def drop_table():
+    sql_command = """DROP TABLE emp;"""
+    cursor.execute(sql_command)
+    connection.commit()
+
+
 def update_entry():
     search_last_name = input('> Provide employee last name to be updated: ')
     sql_command = """SELECT
@@ -115,10 +130,20 @@ def print_db():
         print(i)
 
 
+# TODO: Contextual menu to navigate functions
+# TODO: Protect from code injection for drop table etc.
+
+connection = sqlite3.connect('employee_list.db')
+cursor = connection.cursor()
+
 database_creation()
+# add_dummies()
 # new_entry()
 # update_entry()
-delete_entry()
+# delete_entry()
 
-print_db()
+
+# delete_table()
+# drop_table()
+
 connection.close()
