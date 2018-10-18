@@ -1,5 +1,14 @@
 import sqlite3
-from random import randint
+import datetime
+
+
+# Document number generator using current time
+def document_number_gen():
+    now = datetime.datetime.now()
+    now_string = str(now)
+    now_cleaned = ''.join(e for e in now_string if e.isalnum())
+    now_cleaned_short = now_cleaned[:16]
+    return now_cleaned_short
 
 
 def functionality_choice():
@@ -56,6 +65,7 @@ def functionality_choice():
 
 def database_creation():
     sql_command = """CREATE TABLE IF NOT EXISTS expenses (
+                    doc_number INTEGER,
                     first_name,
                     last_name,
                     description VARCHAR(40),
@@ -74,15 +84,20 @@ def add_dummies():
 
 
 def new_entry():
+    doc_number = document_number_gen()
     input_first_name = input('> Employee first name ')
     input_last_name = input('> Employee last name ')
     input_description = input('> Expense description ')
     input_amount = input('> Amount ')
 
-    sql_command = """INSERT INTO expenses VALUES (?, ?, ?, ?);"""
-    cursor.execute(sql_command, (input_first_name, input_last_name, input_description, input_amount))
+    sql_command = """INSERT INTO expenses VALUES (?, ?, ?, ?, ?);"""
+    cursor.execute(sql_command, (doc_number, input_first_name, input_last_name, input_description, input_amount))
     connection.commit()
 
+
+# Requests user input, provides last name.
+# Entries for last name are shown with ID of expense entry.
+# User decides which entry to delete, or to cancel.
 
 def delete_entry():
     search_last_name = input('> Provide employee last name of entry to be deleted: ')
@@ -96,23 +111,20 @@ def delete_entry():
 
     ans = cursor.fetchmany(size=10)
 
-    print("\nThese are the current entries:", ans)
-    choice = input("Do you want to delete this entry? Press Y to delete, N to cancel: ")
+    print("\nThese are the current entries for your selection:", ans)
+    choice = input("Which entry do you want to delete? Enter the entry ID provided above or type 'None to cancel: ")
 
-    if choice == 'Y':
+    if isinstance(choice, int):
         sql_command = """DELETE
                             FROM
-                                emp
+                                expenses
                             WHERE
-                                last_name = ?;"""
-        cursor.execute(sql_command, (search_last_name,))
+                                ID = ?;"""
+        cursor.execute(sql_command, (choice,))
         connection.commit()
 
-    elif choice == 'N':
-        print('No entry were deleted.')
-
     else:
-        print("\nERROR: you pressed something else. Please try again.\n")
+        print('No entry were deleted.')
         delete_entry()
 
 
@@ -131,15 +143,15 @@ def drop_table():
 def update_entry():
     search_last_name = input('> Provide employee last name to be updated: ')
     sql_command = """SELECT
-                        id, first_name, last_name
+                        doc_number, first_name, last_name
                     FROM
-                        emp
+                        expenses
                     WHERE
                         last_name = ?;"""
 
     cursor.execute(sql_command, (search_last_name,))
-    ans = cursor.fetchone()
-    print("\nThis is the current entry:", ans, ".")
+    ans = cursor.fetchmany(size=10)
+    print("\nThese are the current entries:", ans, ".")
     choice = input("Press 1 to update first name, 2 to update last name: ")
 
     if choice == '1':
@@ -182,11 +194,8 @@ cursor = connection.cursor()
 database_creation()
 print('\n>>> Expenses Management Interface <<<\n')
 
-# add_dummies()
+functionality_choice()
 
-# print_db()
-
-# functionality_choice()
 print_db()
 
 connection.close()
