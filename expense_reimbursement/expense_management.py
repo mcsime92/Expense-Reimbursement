@@ -22,7 +22,7 @@ def functionality_choice():
         new_entry()
 
     elif functionality == "2":
-        answer = input('What would you lke to do? Type 1, 2, or 3:\n'
+        answer = input('\nWhat would you like to do? Type 1, 2, or 3:\n'
                        '1. Update entry \n'
                        '2. Delete entry \n'
                        '3. Quit ')
@@ -39,7 +39,7 @@ def functionality_choice():
             functionality_choice()
 
     elif functionality == "3":
-        answer2 = input('What would you lke to do? Type 1, 2, or 3:\n'
+        answer2 = input('\nWhat would you like to do? Type 1, 2, or 3:\n'
                         '1. Delete table \n'
                         '2. Drop table \n'
                         '3. Quit ')
@@ -100,32 +100,35 @@ def new_entry():
 # User decides which entry to delete, or to cancel.
 
 def delete_entry():
-    search_last_name = input('> Provide employee last name of entry to be deleted: ')
+    search_last_name = input('\n> Provide employee last name of entry to be deleted: ')
     sql_command = """SELECT
-                            first_name, last_name, description, amount 
+                            doc_number, first_name, last_name, description, amount 
                         FROM
                             expenses
                         WHERE
                             last_name = ?;"""
     cursor.execute(sql_command, (search_last_name,))
-
     ans = cursor.fetchmany(size=10)
 
     print("\nThese are the current entries for your selection:", ans)
-    choice = input("Which entry do you want to delete? Enter the entry ID provided above or type 'None to cancel: ")
+    choice = input("Which entry do you want to delete? Enter the entry document number provided above or type 'None "
+                   "to cancel: ")
 
-    if isinstance(choice, int):
+    if isinstance(choice, float):
+        choice_float = float(choice)
+
+
         sql_command = """DELETE
                             FROM
                                 expenses
                             WHERE
-                                ID = ?;"""
-        cursor.execute(sql_command, (choice,))
+                                doc_number = ?;"""
+        cursor.execute(sql_command, (choice_float,))
         connection.commit()
+        print('Entry deleted')
 
     else:
         print('No entry were deleted.')
-        delete_entry()
 
 
 def delete_table():
@@ -143,7 +146,7 @@ def drop_table():
 def update_entry():
     search_last_name = input('> Provide employee last name to be updated: ')
     sql_command = """SELECT
-                        doc_number, first_name, last_name
+                        doc_number, first_name, last_name, description, amount
                     FROM
                         expenses
                     WHERE
@@ -152,31 +155,85 @@ def update_entry():
     cursor.execute(sql_command, (search_last_name,))
     ans = cursor.fetchmany(size=10)
     print("\nThese are the current entries:", ans, ".")
-    choice = input("Press 1 to update first name, 2 to update last name: ")
 
-    if choice == '1':
-        first_name = input('Updated first name: ')
-        sql_command = """UPDATE emp
-                    SET
-                        first_name = ?
-                    WHERE
-                        last_name = ?;"""
-        cursor.execute(sql_command, (first_name, search_last_name))
-        connection.commit()
+    def update_entry_continue():
+        choice = input(
+            "Which entry do you want to update? Enter the entry document number provided above or type 'None' to "
+            "cancel: ")
 
-    elif choice == '2':
-        last_name = input('Updated last name: ')
-        sql_command = """UPDATE emp
-                            SET
-                                last_name = ?
-                            WHERE
-                                last_name = ?;"""
-        cursor.execute(sql_command, (last_name, search_last_name))
-        connection.commit()
+        choice_float = float(choice)
 
-    else:
-        print("\nERROR: you pressed something else. Please try again.\n")
-        update_entry()
+        if isinstance(choice_float, float):
+            choice_updated_field = input("\nWhich field do you want to update? Type 1, 2, 3, or None to cancel: "
+                                         "1. First name "
+                                         "2. Last name "
+                                         "3. Description "
+                                         "4. Amount ")
+            print('first block')
+
+            if choice_updated_field == '1':
+                first_name = input('Updated first name: ')
+
+                sql_command = """UPDATE expenses
+                                SET
+                                    first_name = ?
+                                WHERE
+                                    doc_number = ?;"""
+
+                cursor.execute(sql_command, (first_name, choice_float))
+                connection.commit()
+                print('second block')
+            elif choice_updated_field == '2':
+                last_name = input('Updated last name: ')
+
+                sql_command = """UPDATE expenses
+                                SET
+                                    last_name = ?
+                                WHERE
+                                    doc_number = ?;"""
+
+                cursor.execute(sql_command, (last_name, choice_float))
+                connection.commit()
+                print('third block')
+            elif choice_updated_field == '3':
+                description = input('Updated description name: ')
+
+                sql_command = """UPDATE expenses
+                                SET
+                                    description = ?
+                                WHERE
+                                    doc_number = ?;"""
+
+                cursor.execute(sql_command, (description, choice_float))
+                connection.commit()
+                print('4th block')
+            elif choice_updated_field == '4':
+                amount = input('Updated amount: ')
+
+                sql_command = """UPDATE expenses
+                                SET
+                                    amount = ?
+                                WHERE
+                                    doc_number = ?;"""
+
+                cursor.execute(sql_command, (amount, choice_float))
+                connection.commit()
+                print('5t block')
+            else:
+                print('No entry were deleted.')
+                exit()
+                print('6th block')
+            continue_answer = input('Continue editing or cancel ? Type Continue or cancel: ')
+            if continue_answer == 'Continue' or continue_answer == 'continue':
+                update_entry_continue()
+
+            else:
+                quit()
+
+        else:
+            quit()
+
+    update_entry_continue()
 
 
 # Testing
@@ -196,13 +253,10 @@ print('\n>>> Expenses Management Interface <<<\n')
 
 functionality_choice()
 
-print_db()
-
 connection.close()
 
 # Upcoming Structure - High Level
 # TODO: 1 Expense report
-# TODO: 1.01 Increment entry_id, starting from 1.
 
 # TODO: 2 New table, join 2 tables: expense report to employee mgt
 # TODO: 3 Generate basic report based on above table
