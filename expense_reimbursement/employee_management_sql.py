@@ -3,7 +3,7 @@ from random import randint
 
 
 def functionality_choice():
-    functionality = input('What would you lke to do? Type 1, 2, 3 or 4:\n'
+    functionality = input('What would you like to do? Type 1, 2, 3 or 4:\n'
                           '1. New entry \n'
                           '2. Manage entries \n'
                           '3. Manage table \n'
@@ -13,7 +13,7 @@ def functionality_choice():
         new_entry()
 
     elif functionality == "2":
-        answer = input('What would you lke to do? Type 1, 2, or 3:\n'
+        answer = input('What would you like to do? Type 1, 2, or 3:\n'
                        '1. Update entry \n'
                        '2. Delete entry \n'
                        '3. Quit ')
@@ -30,7 +30,7 @@ def functionality_choice():
             functionality_choice()
 
     elif functionality == "3":
-        answer2 = input('What would you lke to do? Type 1, 2, or 3:\n'
+        answer2 = input('What would you like to do? Type 1, 2, or 3:\n'
                         '1. Delete table \n'
                         '2. Drop table \n'
                         '3. Quit ')
@@ -78,7 +78,6 @@ def add_dummies():
     cursor.execute(sql_command)
 
     connection.commit()
-    connection.close()
 
 
 def new_entry():
@@ -200,6 +199,7 @@ connection = sqlite3.connect('employee_list.db')
 cursor = connection.cursor()
 database_creation()
 print('\n>>> Employee Management Interface <<<\n')
+
 
 functionality_choice()
 
