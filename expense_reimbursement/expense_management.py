@@ -89,7 +89,6 @@ def add_dummies():
     sql_command = """INSERT INTO expenses VALUES(?, "Lisa", "Simpson", "Books", 90);"""
     cursor.execute(sql_command, (first_dummy,))
 
-
     int_first_dummy = int(first_dummy) + 1
     first_dummy = str(int_first_dummy)
     sql_command = """INSERT INTO expenses VALUES(?, "Bart", "Simpson", "Skateboard", 200);"""
@@ -131,7 +130,6 @@ def delete_entry():
 
     if isinstance(choice, float):
         choice_float = float(choice)
-
 
         sql_command = """DELETE
                             FROM
@@ -184,7 +182,6 @@ def update_entry():
                                          "2. Last name "
                                          "3. Description "
                                          "4. Amount ")
-            print('first block')
 
             if choice_updated_field == '1':
                 first_name = input('Updated first name: ')
@@ -197,7 +194,7 @@ def update_entry():
 
                 cursor.execute(sql_command, (first_name, choice_float))
                 connection.commit()
-                print('second block')
+
             elif choice_updated_field == '2':
                 last_name = input('Updated last name: ')
 
@@ -209,7 +206,7 @@ def update_entry():
 
                 cursor.execute(sql_command, (last_name, choice_float))
                 connection.commit()
-                print('third block')
+
             elif choice_updated_field == '3':
                 description = input('Updated description name: ')
 
@@ -221,7 +218,7 @@ def update_entry():
 
                 cursor.execute(sql_command, (description, choice_float))
                 connection.commit()
-                print('4th block')
+
             elif choice_updated_field == '4':
                 amount = input('Updated amount: ')
 
@@ -233,11 +230,11 @@ def update_entry():
 
                 cursor.execute(sql_command, (amount, choice_float))
                 connection.commit()
-                print('5t block')
+
             else:
                 print('No entry were deleted.')
                 exit()
-                print('6th block')
+
             continue_answer = input('Continue editing or cancel ? Type Continue or cancel: ')
             if continue_answer == 'Continue' or continue_answer == 'continue':
                 update_entry_continue()
@@ -265,7 +262,6 @@ connection = sqlite3.connect('employee_list.db')
 cursor = connection.cursor()
 database_creation()
 
-
 print('\n>>> Expenses Management Interface <<<\n')
 print_db()
 
@@ -274,8 +270,3 @@ functionality_choice()
 connection.close()
 
 # Upcoming Structure - High Level
-# TODO: 1 Expense report
-
-# TODO: 2 New table, join 2 tables: expense report to employee mgt
-# TODO: 3 Generate basic report based on above table
-# TODO: 4 Generate report with visuals based on above table
