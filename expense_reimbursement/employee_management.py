@@ -2,6 +2,7 @@ import sqlite3
 from random import randint
 
 
+
 def functionality_choice():
     functionality = input('What would you like to do? Type 1, 2, 3 or 4:\n'
                           '1. New entry \n'
@@ -75,6 +76,9 @@ def add_dummies():
     cursor.execute(sql_command)
 
     sql_command = """INSERT INTO emp VALUES(455, "Bart", "Simpson");"""
+    cursor.execute(sql_command)
+
+    sql_command = """INSERT INTO emp VALUES(456, "Homer", "Simpson");"""
     cursor.execute(sql_command)
 
     connection.commit()
@@ -198,6 +202,7 @@ def print_db():
 connection = sqlite3.connect('employee_list.db')
 cursor = connection.cursor()
 database_creation()
+print_db()
 print('\n>>> Employee Management Interface <<<\n')
 
 

@@ -75,11 +75,26 @@ def database_creation():
 
 # Testing only
 def add_dummies():
-    sql_command = """INSERT INTO expenses VALUES("Moe", "Sizlak", "Paper and pencils", 102.5);"""
-    cursor.execute(sql_command)
+    first_dummy = document_number_gen()
+    sql_command = """INSERT INTO expenses VALUES(?, "Moe", "Sizlak", "Paper and pencils", 102.5);"""
+    cursor.execute(sql_command, (first_dummy,))
 
-    sql_command = """INSERT INTO expenses VALUES("Marge", "Simpson", "Glasses", 90);"""
-    cursor.execute(sql_command)
+    int_first_dummy = int(first_dummy) + 1
+    first_dummy = str(int_first_dummy)
+    sql_command = """INSERT INTO expenses VALUES(?, "Marge", "Simpson", "Glasses", 40);"""
+    cursor.execute(sql_command, (first_dummy,))
+
+    int_first_dummy = int(first_dummy) + 1
+    first_dummy = str(int_first_dummy)
+    sql_command = """INSERT INTO expenses VALUES(?, "Lisa", "Simpson", "Books", 90);"""
+    cursor.execute(sql_command, (first_dummy,))
+
+
+    int_first_dummy = int(first_dummy) + 1
+    first_dummy = str(int_first_dummy)
+    sql_command = """INSERT INTO expenses VALUES(?, "Bart", "Simpson", "Skateboard", 200);"""
+    cursor.execute(sql_command, (first_dummy,))
+
     connection.commit()
 
 
@@ -249,7 +264,10 @@ def print_db():
 connection = sqlite3.connect('employee_list.db')
 cursor = connection.cursor()
 database_creation()
+
+
 print('\n>>> Expenses Management Interface <<<\n')
+print_db()
 
 functionality_choice()
 
